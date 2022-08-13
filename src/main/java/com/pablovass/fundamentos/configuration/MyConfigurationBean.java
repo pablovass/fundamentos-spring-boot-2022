@@ -1,8 +1,6 @@
 package com.pablovass.fundamentos.configuration;
 
-import com.pablovass.fundamentos.bean.MyBean;
-import com.pablovass.fundamentos.bean.MyBeanImplement;
-import com.pablovass.fundamentos.bean.MyBeanTwoImplement;
+import com.pablovass.fundamentos.bean.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,5 +10,13 @@ public class MyConfigurationBean {
     public MyBean beanOperation(){
         //return new MyBeanImplement();
         return new MyBeanTwoImplement();
+    }
+    @Bean
+    public MyOperation beanOperationOperation(){
+        return new MyOperationImplement();
+    }
+    @Bean
+    public MyBeanWithDependency beanOperationOperationOperationWithDependency(MyOperation myOperation){
+        return new MyBeanWithDependencyImplement(myOperation);
     }
 }
