@@ -4,6 +4,9 @@ import com.pablovass.fundamentos.bean.MyBean;
 import com.pablovass.fundamentos.bean.MyBeanWithDependency;
 import com.pablovass.fundamentos.component.ComponentDependency;
 import com.pablovass.fundamentos.configuration.MyBeanWithProperties;
+import com.pablovass.fundamentos.pojo.UserPojo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -12,10 +15,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class FundamentosApplication implements CommandLineRunner {
+private  final Log LOGGER= LogFactory.getLog(FundamentosApplication.class);
  private ComponentDependency componentDependency;
  private MyBean myBean;
 private MyBeanWithDependency myBeanWithDependency;
 private  MyBeanWithProperties myBeanWithProperties;
+private UserPojo userPojo;
  //@Autowired ya no es nesesario
 	/* CON UNA IMPLEMENTACION
 	* public FundamentosApplication(ComponentDependency componentDependency) {
@@ -27,11 +32,12 @@ public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDepen
 }
 	* */
 	//CON 2 IMPLEMENTACIONS
-public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDependency componentDependency , MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties) {
+public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDependency componentDependency , MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties, UserPojo userPojo) {
 	this.componentDependency = componentDependency;
 	this.myBean=myBean;
 	this.myBeanWithDependency=myBeanWithDependency;
 	this.myBeanWithProperties =myBeanWithProperties;
+	this.userPojo=userPojo;
 }
 
 
@@ -44,6 +50,13 @@ public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDepen
 		componentDependency.saludar();
 		myBean.print();
 		myBeanWithDependency.printWithDependency();
-		System.out.println(myBeanWithProperties.function());;
+		System.out.println(myBeanWithProperties.function());
+		System.out.println(userPojo.getEmail()+" "+userPojo.getPassword());
+		//LOGGER.error("esto es un error del aplicativo");
+		try{
+			//error
+		}catch (Exception e){
+			LOGGER.error("esto es un error del aplicativo");
+		}
 	}
 }
