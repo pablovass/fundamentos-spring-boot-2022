@@ -55,8 +55,10 @@ public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDepen
 		//LOGGER.error("esto es un error del aplicativo");
 		try{
 			//error
+			int value=10/0;
+			LOGGER.debug("Mi valor: "+ value);
 		}catch (Exception e){
-			LOGGER.error("esto es un error del aplicativo");
+			LOGGER.error("esto es un error al dividir por cero" + e.getMessage());
 		}
 	}
 }
