@@ -7,6 +7,7 @@ import com.pablovass.fundamentos.configuration.MyBeanWithProperties;
 import com.pablovass.fundamentos.entity.User;
 import com.pablovass.fundamentos.pojo.UserPojo;
 import com.pablovass.fundamentos.repository.UserRepository;
+import com.pablovass.fundamentos.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +31,7 @@ public class FundamentosApplication implements CommandLineRunner {
     private MyBeanWithProperties myBeanWithProperties;
     private UserPojo userPojo;
     private UserRepository userRepository;
+    private UserService userService;
 
     //@Autowired ya no es nesesario
 	/* CON UNA IMPLEMENTACION
@@ -42,13 +44,14 @@ public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDepen
 }
 	* */
     //CON 2 IMPLEMENTACIONS
-    public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDependency componentDependency, MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties, UserPojo userPojo, UserRepository userRepository) {
+    public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDependency componentDependency, MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties, UserPojo userPojo, UserRepository userRepository, UserService userService) {
         this.componentDependency = componentDependency;
         this.myBean = myBean;
         this.myBeanWithDependency = myBeanWithDependency;
         this.myBeanWithProperties = myBeanWithProperties;
         this.userPojo = userPojo;
         this.userRepository = userRepository;
+        this.userService =userService;
     }
 
 
@@ -61,8 +64,28 @@ public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDepen
         //ejemplosAteriores();
         saveUserInDataBase();
         getInformationJpqlFromUser();
+        saveWithErrorTransactional();
     }
+    private void saveWithErrorTransactional() {
+        User test1 = new User("TestTransactional1", "TestTransactional1@domain.com", LocalDate.now());
+        User test2 = new User("TestTransactional2", "TestTransactional2@domain.com", LocalDate.now());
+       // User test3 = new User("TestTransactional3", null, LocalDate.now());
+//        User test3 = new User("TestTransactional3", "TestTransactional4@domain.com", LocalDate.now()); //ejemplo dos
+        User test4 = new User("TestTransactional4", "TestTransactional4@domain.com", LocalDate.now());
+        List<User> users = Arrays.asList(test1, test2, test4);
 
+        try {
+          //  userService.save(users);
+            userService.saveTransactional(users);
+           // users.stream().forEach(user -> LOGGER.info("Mi usuario registrado " + user.toString()));
+        } catch (Exception e) {
+            LOGGER.error("Estp es una excepcion dentro del metodo transaccional "+e);
+            //LOGGER.error(e.getMessage());
+        }
+        userService.getAllUsers().stream()
+                .forEach(user -> LOGGER.info("esste usuario dentro del metodo transaccional "+ user));
+        //getUsers();
+    }
     /*** este metodo tiene todas las consultas slq instaciada */
     private void getInformationJpqlFromUser() {
  /*
