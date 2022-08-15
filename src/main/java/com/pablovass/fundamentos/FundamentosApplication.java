@@ -68,6 +68,12 @@ public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDepen
 	userRepository.findByAndSort("user", Sort.by("id").descending())
 			.stream()
 			.forEach(user->LOGGER.info("usuario con metod sort"+ user));
+	userRepository.findByName("John")
+			.stream()
+			.forEach(user -> LOGGER.info("Usuario con query method "+user ));
+
+	LOGGER.info("Usuario con query method findByEmailAndName " +userRepository.findByEmailAndName("daniela@domain.com","Daniela")
+			.orElseThrow(()->new RuntimeException("Usuario no encontrado")));
 	}
 
 	private void  saveUserInDataBase(){
